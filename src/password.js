@@ -15,6 +15,9 @@
       strongPass: 'Strong password',
       containsField: 'The password contains your username',
       enterPass: 'Type your password',
+      noDigit: 'A digit is required',
+      noUpperLetter: 'An uppercase letter is required',
+      noLowerLetter: 'A lowercase letter is required',
       showPercent: false,
       showText: true,
       animate: true,
@@ -23,6 +26,9 @@
       fieldPartialMatch: true,
       minimumLength: 4,
       closestSelector: 'div',
+      requiresDigit: false,
+      requiresUpperLetter: false,
+      requiresLowerLetter: false
     };
 
     options = $.extend({}, defaults, options);
@@ -39,6 +45,15 @@
       }
       if (score === -2) {
         return options.containsField;
+      }
+      if (score === -3) {
+        return options.noDigit;
+      }
+      if (score === -4) {
+        return options.noUpperLetter;
+      }
+      if (score === -5) {
+        return options.noLowerLetter;
       }
 
       score = score < 0 ? 0 : score;
@@ -81,6 +96,18 @@
             return -2;
           }
         }
+      }
+
+      if (options.requiresDigit && !password.match(/[0-9]/)) {
+        return -3;
+      }
+
+      if (options.requiresUpperLetter && !password.match(/[A-Z]/)) {
+        return -4;
+      }
+
+      if (options.requiresLowerLetter && !password.match(/[a-z]/)) {
+        return -5;
       }
 
       // password length
